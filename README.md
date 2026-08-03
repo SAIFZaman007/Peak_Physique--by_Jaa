@@ -60,8 +60,8 @@ Peak_Physique/
                               └───────────┬───────────┘
                                           ▼
                     ┌───────────────┬─────────────┬────────────────┐
-                    │  PostgreSQL   │   Stripe    │ Google Calendar │
-                    │  (core data)  │  (payments) │  + SMTP email   │
+                    │  PostgreSQL   │   Stripe    │ Google Calendar│
+                    │  (core data)  │  (payments) │  + SMTP email  │
                     └───────────────┴─────────────┴────────────────┘
 ```
 
