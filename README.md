@@ -48,7 +48,7 @@ Peak_Physique/
                  │   frontend (5173)  │       │  dashboard (5174)  │
                  │  Public + Portal   │       │  Trainer / Admin   │
                  └─────────┬──────────┘       └─────────┬──────────┘
-                           │  HTTPS / JSON (JWT)         │
+                           │  HTTPS / JSON (JWT)        │
                            └──────────────┬─────────────┘
                                           ▼
                               ┌───────────────────────┐
