@@ -1,11 +1,16 @@
 import { Link } from "react-router-dom";
-import { Mail, Phone, MapPin } from "lucide-react";
+import { Mail, Phone, MapPin, Instagram, Facebook, Youtube, Twitter } from "lucide-react";
 
-/*
- * NOTE: Social media icons were intentionally removed as part of the agreed
- * site cleanup. Contact details replace them so visitors still have a clear
- * way to get in touch.
- */
+// Update these to the client's real profiles when they're ready — "#"
+// placeholders keep the icons visible (as requested) without pointing
+// anywhere broken in the meantime.
+const SOCIALS = [
+  { Icon: Instagram, href: "#", label: "Instagram" },
+  { Icon: Facebook, href: "#", label: "Facebook" },
+  { Icon: Youtube, href: "#", label: "YouTube" },
+  { Icon: Twitter, href: "#", label: "X (Twitter)" },
+];
+
 export default function Footer() {
   const year = new Date().getFullYear();
   return (
@@ -56,8 +61,20 @@ export default function Footer() {
         </div>
       </div>
 
-      <div className="max-w-6xl mx-auto mt-12 pt-6 border-t border-ink-800 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-white/40">
+      <div className="max-w-6xl mx-auto mt-12 pt-6 border-t border-ink-800 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-white/40">
         <p>© {year} Peak Physique. All rights reserved.</p>
+        <div className="flex items-center gap-3">
+          {SOCIALS.map(({ Icon, href, label }) => (
+            <a
+              key={label}
+              href={href}
+              aria-label={label}
+              className="flex h-8 w-8 items-center justify-center rounded-full border border-ink-700 text-white/50 transition-colors hover:border-gold/50 hover:text-gold"
+            >
+              <Icon size={14} />
+            </a>
+          ))}
+        </div>
         <p>Built for peak performance.</p>
       </div>
     </footer>

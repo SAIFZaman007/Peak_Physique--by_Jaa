@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { CheckCircle2, Loader2 } from "lucide-react";
+import { useEffect, useState } from "react";
+import { CheckCircle2, Loader2, Mail, MapPin } from "lucide-react";
 import { api, apiError } from "../lib/api";
 import { useAuth } from "../context/AuthContext.jsx";
 
@@ -12,6 +12,19 @@ const SERVICES = [
   "Virtual Training",
 ];
 const TIMES = ["7:00 AM", "9:00 AM", "11:00 AM", "1:00 PM", "3:00 PM", "5:00 PM", "7:00 PM"];
+
+const INFO_FALLBACK = {
+  eyebrow: "Ready To Build Your Peak?",
+  heading_line1: "Book Your Free",
+  heading_line2: "Intro Call",
+  body:
+    "No pressure, no commitment. We'll talk through your goals, answer your questions, and figure out if we're the right fit. Fifteen minutes could change your whole approach.",
+  email: "join@trainpeakphysique.com",
+  location: "On Campus · Virtual Available Nationwide",
+  image_url: "https://images.unsplash.com/photo-1599058917765-a780eda07a3e?w=800&q=80&auto=format&fit=crop&crop=center",
+  quote: "The first step is always the most important. Book your call — everything else follows.",
+  quote_author: "Peak Physique",
+};
 
 function toISO(dateStr, timeLabel) {
   // Combine yyyy-mm-dd + "1:00 PM" into an ISO datetime string.
@@ -28,6 +41,7 @@ const todayStr = new Date().toISOString().split("T")[0];
 
 export default function Booking() {
   const { user } = useAuth();
+  const [info, setInfo] = useState(INFO_FALLBACK);
   const [form, setForm] = useState({
     name: user ? `${user.first_name} ${user.last_name}`.trim() : "",
     email: user?.email || "",
@@ -39,6 +53,12 @@ export default function Booking() {
   });
   const [status, setStatus] = useState("idle"); // idle | loading | done | error
   const [error, setError] = useState("");
+
+  useEffect(() => {
+    api.get("/content/booking")
+      .then(({ data }) => data?.data && setInfo({ ...INFO_FALLBACK, ...data.data }))
+      .catch(() => {});
+  }, []);
 
   const set = (k) => (e) => setForm((f) => ({ ...f, [k]: e.target.value }));
 
@@ -70,13 +90,13 @@ export default function Booking() {
     <section id="booking" className="px-6 md:px-14 py-24">
       <div className="max-w-5xl mx-auto grid gap-12 lg:grid-cols-2 lg:items-center">
         <div>
-          <p className="eyebrow">Ready To Build Your Peak?</p>
-          <h2 className="h-display text-5xl md:text-6xl">Book Your Free Intro Call</h2>
-          <p className="mt-5 text-white/60 leading-relaxed">
-            No pressure, no commitment. We'll talk through your goals, answer your
-            questions, and figure out if we're the right fit. Fifteen minutes could
-            change your whole approach.
-          </p>
+          <p className="eyebrow">{info.eyebrow}</p>
+          <h2 className="h-display text-5xl md:text-6xl">
+            {info.heading_line1}
+            <br />
+            {info.heading_line2}
+          </h2>
+          <p className="mt-5 text-white/60 leading-relaxed">{info.body}</p>
           <ul className="mt-8 space-y-3 text-white/75">
             {["100% free, zero obligation", "Personalized game plan", "Real answers from a real coach"].map((t) => (
               <li key={t} className="flex items-center gap-3">
@@ -84,6 +104,40 @@ export default function Booking() {
               </li>
             ))}
           </ul>
+
+          <div className="mt-8 space-y-3">
+            {info.email && (
+              <a href={`mailto:${info.email}`} className="flex items-center gap-3 text-sm text-white/70 hover:text-gold">
+                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-sm border border-ink-700 text-gold">
+                  <Mail size={16} />
+                </span>
+                {info.email}
+              </a>
+            )}
+            {info.location && (
+              <div className="flex items-center gap-3 text-sm text-white/70">
+                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-sm border border-ink-700 text-gold">
+                  <MapPin size={16} />
+                </span>
+                {info.location}
+              </div>
+            )}
+          </div>
+
+          {info.image_url && (
+            <div className="relative mt-7 h-56 overflow-hidden rounded-sm border border-ink-700">
+              <img src={info.image_url} alt="" className="h-full w-full object-cover" />
+              <div className="absolute inset-0 bg-gradient-to-t from-ink-950/90 via-ink-950/10 to-transparent" />
+              {info.quote && (
+                <div className="absolute inset-x-4 bottom-4">
+                  <p className="text-[13px] italic leading-snug text-white/85">"{info.quote}"</p>
+                  {info.quote_author && (
+                    <p className="mt-1.5 text-[11px] font-bold tracking-wider text-gold">— {info.quote_author}</p>
+                  )}
+                </div>
+              )}
+            </div>
+          )}
         </div>
 
         <div className="card border-ink-700">

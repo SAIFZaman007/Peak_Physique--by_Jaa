@@ -6,12 +6,12 @@ import { useAuth } from "../context/AuthContext.jsx";
 import { formatCurrency } from "../lib/utils";
 
 const FALLBACK = [
-  { slug: "starter", name: "Starter", price_cents: 4900, interval: "month", is_featured: false,
+  { slug: "starter", name: "Starter", price_cents: 4900, interval: "one_time", is_featured: false,
     features: ["60-min strategy session", "Goal assessment & roadmap", "Sample workout template", "Nutrition guidelines", "7-day support"] },
   { slug: "peak", name: "Peak", price_cents: 14900, interval: "month", is_featured: true,
     features: ["Full 1-on-1 coaching", "Custom workout program", "Nutrition coaching", "Weekly check-ins", "Unlimited messaging", "Progress tracking"] },
   { slug: "elite", name: "Elite", price_cents: 19900, interval: "month", is_featured: false,
-    features: ["Everything in Peak", "4 live sessions / month", "In-person OR virtual", "Supplement guidance", "Monthly body analysis", "Lifestyle planning"] },
+    features: ["Everything in Peak", "4 live sessions / month", "In-person OR virtual", "Priority response (<1hr)", "Supplement guidance", "Monthly body analysis", "Campus lifestyle planning"] },
 ];
 
 export default function Pricing() {
@@ -87,7 +87,7 @@ export default function Pricing() {
                   {formatCurrency(p.price_cents)}
                 </span>
                 <span className="text-sm text-muted">
-                  /{p.interval === "month" ? "mo" : "once"}
+                  {p.interval === "month" ? "/mo" : " one-time"}
                 </span>
               </div>
               <ul className="mt-6 flex-1 space-y-3">

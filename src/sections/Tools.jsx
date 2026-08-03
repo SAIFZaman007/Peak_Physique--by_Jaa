@@ -1,12 +1,14 @@
 import { useState } from "react";
-import { Dumbbell, Scale, Calculator } from "lucide-react";
+import { Dumbbell, Scale, Calculator, Flame } from "lucide-react";
 import WorkoutGenerator from "../tools/WorkoutGenerator.jsx";
 import BmiCalculator from "../tools/BmiCalculator.jsx";
 import MacroPlanner from "../tools/MacroPlanner.jsx";
+import CalorieCalculator from "../tools/CalorieCalculator.jsx";
 
 const TABS = [
   { key: "workout", label: "Workout Generator", icon: Dumbbell, Comp: WorkoutGenerator },
   { key: "bmi", label: "BMI Calculator", icon: Scale, Comp: BmiCalculator },
+  { key: "calories", label: "Calorie Calculator", icon: Flame, Comp: CalorieCalculator },
   { key: "macro", label: "Macro Planner", icon: Calculator, Comp: MacroPlanner },
 ];
 
