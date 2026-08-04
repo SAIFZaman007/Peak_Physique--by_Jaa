@@ -66,13 +66,13 @@ export default function Pricing() {
           </div>
         )}
 
-        <div className="mt-12 grid gap-6 md:grid-cols-3 md:items-start">
+        <div className="mt-12 grid gap-6 md:grid-cols-3 md:items-stretch">
           {plans.map((p) => (
             <div
               key={p.slug}
               className={`card relative flex flex-col ${
                 p.is_featured
-                  ? "border-gold md:-mt-4 md:pb-10 bg-gradient-to-b from-gold/[0.08] to-transparent"
+                  ? "border-gold md:scale-[1.04] bg-gradient-to-b from-gold/[0.08] to-transparent shadow-gold"
                   : ""
               }`}
             >

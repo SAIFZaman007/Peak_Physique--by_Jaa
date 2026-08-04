@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Menu, X } from "lucide-react";
+import { Menu, ShoppingBag, X } from "lucide-react";
 import { useAuth } from "../context/AuthContext.jsx";
+import { useCart } from "../context/CartContext.jsx";
 import { cn } from "../lib/utils";
 
 const LINKS = [
@@ -10,6 +11,24 @@ const LINKS = [
   { href: "#pricing", label: "Pricing" },
   { href: "#testimonials", label: "Results" },
 ];
+
+function CartButton({ className = "" }) {
+  const { count, setOpen } = useCart();
+  return (
+    <button
+      onClick={() => setOpen(true)}
+      className={cn("relative text-white/80 hover:text-gold transition-colors", className)}
+      aria-label={`Open cart${count ? ` (${count} items)` : ""}`}
+    >
+      <ShoppingBag size={21} />
+      {count > 0 && (
+        <span className="absolute -right-2 -top-2 flex h-4 w-4 items-center justify-center rounded-full bg-gold text-[10px] font-bold text-ink-950">
+          {count > 9 ? "9+" : count}
+        </span>
+      )}
+    </button>
+  );
+}
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
@@ -47,7 +66,8 @@ export default function Navbar() {
         ))}
       </ul>
 
-      <div className="hidden md:flex items-center gap-4">
+      <div className="hidden md:flex items-center gap-5">
+        <CartButton />
         {user ? (
           <Link to="/portal" className="btn-primary !px-6 !py-2.5">
             My Portal
@@ -64,13 +84,16 @@ export default function Navbar() {
         )}
       </div>
 
-      <button
-        className="md:hidden text-white p-1"
-        onClick={() => setOpen((o) => !o)}
-        aria-label="Toggle menu"
-      >
-        {open ? <X size={24} /> : <Menu size={24} />}
-      </button>
+      <div className="flex items-center gap-4 md:hidden">
+        <CartButton />
+        <button
+          className="text-white p-1"
+          onClick={() => setOpen((o) => !o)}
+          aria-label="Toggle menu"
+        >
+          {open ? <X size={24} /> : <Menu size={24} />}
+        </button>
+      </div>
 
       {open && (
         <div className="absolute top-full left-0 right-0 bg-ink-950 border-b border-gold/20 md:hidden px-6 py-5 flex flex-col gap-4">

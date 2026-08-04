@@ -5,6 +5,8 @@ import Register from "./pages/Register.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
 import PortalLayout from "./pages/portal/PortalLayout.jsx";
 import ChatWidget from "./components/ChatWidget.jsx";
+import CartDrawer from "./components/CartDrawer.jsx";
+import { CartProvider } from "./context/CartContext.jsx";
 import Overview from "./pages/portal/Overview.jsx";
 import Progress from "./pages/portal/Progress.jsx";
 import Bookings from "./pages/portal/Bookings.jsx";
@@ -13,7 +15,7 @@ import Messages from "./pages/portal/Messages.jsx";
 
 export default function App() {
   return (
-    <>
+    <CartProvider>
       <Routes>
         <Route path="/" element={<Landing />} />
         <Route path="/login" element={<Login />} />
@@ -38,6 +40,7 @@ export default function App() {
       </Routes>
 
       <ChatWidget />
-    </>
+      <CartDrawer />
+    </CartProvider>
   );
 }
