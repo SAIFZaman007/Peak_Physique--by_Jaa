@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { CalendarDays, X } from "lucide-react";
+import { CalendarClock, CalendarDays, X } from "lucide-react";
 import { api } from "../../lib/api";
 import { formatDateTime, STATUS_STYLES } from "../../lib/utils";
 
@@ -38,7 +38,11 @@ export default function Bookings() {
       ) : (
         <div className="grid gap-4">
           {bookings.map((b) => {
-            const upcoming = new Date(b.start_time) >= new Date() && b.status !== "cancelled";
+            // A purchased session with no time yet (see Booking.start_time)
+            // is still cancellable, same as anything upcoming — only a
+            // scheduled slot that's already passed, or an already-cancelled
+            // booking, hides the button.
+            const upcoming = (!b.start_time || new Date(b.start_time) >= new Date()) && b.status !== "cancelled";
             return (
               <div key={b.id} className="card flex flex-wrap items-center justify-between gap-4">
                 <div>
@@ -48,7 +52,13 @@ export default function Bookings() {
                       {b.status}
                     </span>
                   </div>
-                  <p className="mt-1 text-sm text-white/50">{formatDateTime(b.start_time)}</p>
+                  {b.start_time ? (
+                    <p className="mt-1 text-sm text-white/50">{formatDateTime(b.start_time)}</p>
+                  ) : (
+                    <p className="mt-1 flex items-center gap-1.5 text-sm text-gold">
+                      <CalendarClock size={14} /> Awaiting scheduling — we'll confirm a time shortly
+                    </p>
+                  )}
                   {b.goal && <p className="mt-1 text-xs text-white/40">Goal: {b.goal}</p>}
                 </div>
                 {upcoming && (

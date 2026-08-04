@@ -16,6 +16,12 @@ const FALLBACK = {
     { num: "5+", label: "Service Options" },
     { num: "24/7", label: "AI Support" },
   ],
+  // Admin-editable via the SiteContent "hero" section (see /content/hero) —
+  // swap this for the trainer's own photography whenever it's ready, no
+  // code change required. Falls back to this stock training shot so the
+  // hero never ships with an empty background.
+  background_image:
+    "https://images.unsplash.com/photo-1605296867304-46d5465a13f1?auto=format&fit=crop&w=2000&q=80",
 };
 
 export default function Hero() {
@@ -35,6 +41,21 @@ export default function Hero() {
         background: "linear-gradient(135deg, #0A0A0A 0%, #1a1000 50%, #0A0A0A 100%)",
       }}
     >
+      {/* Background training photo */}
+      <div
+        className="absolute inset-0 z-0 bg-cover bg-center"
+        style={{ backgroundImage: `url('${c.background_image}')` }}
+      />
+      {/* Dark gradient over the photo so the headline/copy stay readable —
+          strongest behind the text on the left, fading out toward the right
+          so the image itself still reads. */}
+      <div
+        className="absolute inset-0 z-0"
+        style={{
+          background:
+            "linear-gradient(100deg, #0A0A0A 0%, rgba(10,10,10,0.95) 34%, rgba(10,10,10,0.78) 52%, rgba(10,10,10,0.4) 75%, rgba(10,10,10,0.55) 100%)",
+        }}
+      />
       <div className="gold-grid absolute inset-0 z-0" />
       <div
         className="absolute z-0 rounded-full"

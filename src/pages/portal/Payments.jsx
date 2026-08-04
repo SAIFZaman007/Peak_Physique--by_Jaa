@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { CreditCard } from "lucide-react";
+import { useSearchParams } from "react-router-dom";
+import { CheckCircle2, CreditCard, Loader2, XCircle } from "lucide-react";
 import { api } from "../../lib/api";
 import { formatCurrency, formatDate, STATUS_STYLES } from "../../lib/utils";
 
@@ -7,14 +8,40 @@ export default function Payments() {
   const [payments, setPayments] = useState([]);
   const [config, setConfig] = useState({ stripe_enabled: false });
   const [loading, setLoading] = useState(true);
+  const [params, setParams] = useSearchParams();
+  const [verifyState, setVerifyState] = useState(null); // null | "checking" | "succeeded" | "error"
+
+  const loadPayments = () => api.get("/payments/me").then(({ data }) => setPayments(data));
 
   useEffect(() => {
-    Promise.all([api.get("/payments/me"), api.get("/payments/config")])
-      .then(([p, c]) => {
-        setPayments(p.data);
-        setConfig(c.data);
+    Promise.all([loadPayments(), api.get("/payments/config").then(({ data }) => setConfig(data))]).finally(() =>
+      setLoading(false)
+    );
+  }, []);
+
+  // The redirect back from Stripe lands here as
+  // /portal/payments?status=success&session_id=cs_test_... — confirm it
+  // with the backend right away instead of waiting on a webhook, so the
+  // status below reads "Succeeded" the moment the page loads rather than
+  // sitting on "Pending" until something else happens to refresh it.
+  useEffect(() => {
+    const status = params.get("status");
+    const sessionId = params.get("session_id");
+    if (status !== "success" || !sessionId) return;
+
+    setVerifyState("checking");
+    api
+      .get(`/payments/verify/${sessionId}`)
+      .then(async ({ data }) => {
+        setVerifyState(data.status === "succeeded" ? "succeeded" : "error");
+        await loadPayments();
       })
-      .finally(() => setLoading(false));
+      .catch(() => setVerifyState("error"))
+      .finally(() => {
+        // Drop the query params so a page refresh doesn't re-trigger this.
+        setParams({}, { replace: true });
+      });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const total = payments
@@ -27,6 +54,23 @@ export default function Payments() {
         <h2 className="font-display text-3xl tracking-[1px]">Payments</h2>
         <p className="text-sm text-white/40">Your billing history and receipts.</p>
       </div>
+
+      {verifyState === "checking" && (
+        <div className="flex items-center gap-3 rounded-sm border border-gold/25 bg-gold/[0.05] p-4 text-sm text-white/70">
+          <Loader2 size={18} className="animate-spin text-gold" /> Confirming your payment with Stripe…
+        </div>
+      )}
+      {verifyState === "succeeded" && (
+        <div className="flex items-center gap-3 rounded-sm border border-emerald-500/30 bg-emerald-500/10 p-4 text-sm text-emerald-400">
+          <CheckCircle2 size={18} /> Payment confirmed — thank you!
+        </div>
+      )}
+      {verifyState === "error" && (
+        <div className="flex items-center gap-3 rounded-sm border border-danger/30 bg-danger/10 p-4 text-sm text-danger">
+          <XCircle size={18} /> We couldn't confirm that payment automatically. If your card was charged, it'll
+          sync shortly — otherwise contact us and we'll sort it out.
+        </div>
+      )}
 
       <div className="grid gap-4 sm:grid-cols-3">
         <div className="card">

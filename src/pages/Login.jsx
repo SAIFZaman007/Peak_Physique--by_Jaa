@@ -49,9 +49,6 @@ export default function Login() {
         New here?{" "}
         <Link to="/register" className="text-gold hover:underline">Create an account</Link>
       </p>
-      <div className="mt-4 rounded-sm border border-gold/20 bg-gold/[0.05] p-3 text-center text-xs text-white/50">
-        Demo login — <span className="text-gold">demo@peakphysique.com</span> / <span className="text-gold">peak2025</span>
-      </div>
     </AuthShell>
   );
 }
