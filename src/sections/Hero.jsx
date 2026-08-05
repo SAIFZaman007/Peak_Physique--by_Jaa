@@ -16,12 +16,8 @@ const FALLBACK = {
     { num: "5+", label: "Service Options" },
     { num: "24/7", label: "AI Support" },
   ],
-  // Admin-editable via the SiteContent "hero" section (see /content/hero) —
-  // swap this for the trainer's own photography whenever it's ready, no
-  // code change required. Falls back to this stock training shot so the
-  // hero never ships with an empty background.
   background_image:
-    "https://images.unsplash.com/photo-1605296867304-46d5465a13f1?auto=format&fit=crop&w=2000&q=80",
+    "https://res.cloudinary.com/e4hsg7br/image/upload/v1785911814/peakphysiqueHERO_fmgda2.png",
 };
 
 export default function Hero() {
