@@ -13,7 +13,7 @@ const FALLBACK = {
   // the section gracefully merges into a single centered column below
   // instead of leaving a blank box.
   image_url:
-    "https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=800&q=85&auto=format&fit=crop",
+    "https://res.cloudinary.com/e4hsg7br/image/upload/v1785935465/Picture1_ykeldl.jpg",
   image_caption: "Science-Based Training",
   stats: [
     { num: "100%", label: "Science-Based" },
