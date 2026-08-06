@@ -1,15 +1,5 @@
 import { Link } from "react-router-dom";
-import { Mail, Phone, MapPin, Instagram, Facebook, Youtube, Twitter } from "lucide-react";
-
-// Update these to the client's real profiles when they're ready — "#"
-// placeholders keep the icons visible (as requested) without pointing
-// anywhere broken in the meantime.
-const SOCIALS = [
-  { Icon: Instagram, href: "#", label: "Instagram" },
-  { Icon: Facebook, href: "#", label: "Facebook" },
-  { Icon: Youtube, href: "#", label: "YouTube" },
-  { Icon: Twitter, href: "#", label: "X (Twitter)" },
-];
+import { Mail, Phone, MapPin } from "lucide-react";
 
 export default function Footer() {
   const year = new Date().getFullYear();
@@ -49,10 +39,10 @@ export default function Footer() {
           <h4 className="eyebrow">Contact</h4>
           <ul className="space-y-3 text-sm text-white/60">
             <li className="flex items-center gap-2">
-              <Mail size={15} className="text-gold" /> hello@trainpeakphysique.com
+              <Mail size={15} className="text-gold" /> join@trainpeakphysique.com
             </li>
             <li className="flex items-center gap-2">
-              <Phone size={15} className="text-gold" /> (555) 200-7246
+              <Phone size={15} className="text-gold" /> 888-323-1052
             </li>
             <li className="flex items-center gap-2">
               <MapPin size={15} className="text-gold" /> Online &amp; In-Person
@@ -63,18 +53,6 @@ export default function Footer() {
 
       <div className="max-w-6xl mx-auto mt-12 pt-6 border-t border-ink-800 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-white/40">
         <p>© {year} Peak Physique. All rights reserved.</p>
-        <div className="flex items-center gap-3">
-          {SOCIALS.map(({ Icon, href, label }) => (
-            <a
-              key={label}
-              href={href}
-              aria-label={label}
-              className="flex h-8 w-8 items-center justify-center rounded-full border border-ink-700 text-white/50 transition-colors hover:border-gold/50 hover:text-gold"
-            >
-              <Icon size={14} />
-            </a>
-          ))}
-        </div>
         <p>Built for peak performance.</p>
       </div>
     </footer>

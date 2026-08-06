@@ -11,7 +11,6 @@ const SERVICES = [
   "In-Person Training",
   "Virtual Training",
 ];
-const TIMES = ["7:00 AM", "9:00 AM", "11:00 AM", "1:00 PM", "3:00 PM", "5:00 PM", "7:00 PM"];
 
 const INFO_FALLBACK = {
   eyebrow: "Ready To Build Your Peak?",
@@ -26,19 +25,6 @@ const INFO_FALLBACK = {
   quote_author: "Peak Physique",
 };
 
-function toISO(dateStr, timeLabel) {
-  // Combine yyyy-mm-dd + "1:00 PM" into an ISO datetime string.
-  const [time, mer] = timeLabel.split(" ");
-  let [h, m] = time.split(":").map(Number);
-  if (mer === "PM" && h !== 12) h += 12;
-  if (mer === "AM" && h === 12) h = 0;
-  const d = new Date(`${dateStr}T00:00:00`);
-  d.setHours(h, m, 0, 0);
-  return d.toISOString();
-}
-
-const todayStr = new Date().toISOString().split("T")[0];
-
 export default function Booking() {
   const { user } = useAuth();
   const [info, setInfo] = useState(INFO_FALLBACK);
@@ -48,8 +34,6 @@ export default function Booking() {
     phone: "",
     goal: "",
     service: "Free Intro Call",
-    date: "",
-    time: "",
   });
   const [status, setStatus] = useState("idle"); // idle | loading | done | error
   const [error, setError] = useState("");
@@ -65,8 +49,8 @@ export default function Booking() {
   const submit = async (e) => {
     e.preventDefault();
     setError("");
-    if (!form.name || !form.email || !form.date || !form.time) {
-      setError("Please fill in your name, email, and pick a date & time.");
+    if (!form.name || !form.email) {
+      setError("Please fill in your name and email.");
       return;
     }
     setStatus("loading");
@@ -77,7 +61,6 @@ export default function Booking() {
         phone: form.phone || null,
         goal: form.goal || null,
         service: form.service,
-        start_time: toISO(form.date, form.time),
       });
       setStatus("done");
     } catch (err) {
@@ -144,11 +127,11 @@ export default function Booking() {
           {status === "done" ? (
             <div className="flex flex-col items-center py-10 text-center">
               <CheckCircle2 size={56} className="text-gold" />
-              <h3 className="mt-5 font-display text-3xl tracking-[1px]">You're Booked!</h3>
+              <h3 className="mt-5 font-display text-3xl tracking-[1px]">Request Received!</h3>
               <p className="mt-3 text-sm text-white/60">
-                Thanks, {form.name.split(" ")[0]}. We've sent a confirmation to{" "}
+                Thanks, {form.name.split(" ")[0]}. We've sent a note to{" "}
                 <span className="text-white">{form.email}</span> and your coach will
-                reach out to confirm the details shortly.
+                lock in a time on the calendar and confirm the details shortly.
               </p>
             </div>
           ) : (
@@ -179,19 +162,10 @@ export default function Booking() {
                 <label className="field-label">Your main goal (optional)</label>
                 <input value={form.goal} onChange={set("goal")} className="field-input" placeholder="e.g. Lose 15 lbs, build muscle…" />
               </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="field-label">Preferred date</label>
-                  <input type="date" min={todayStr} value={form.date} onChange={set("date")} className="field-input" />
-                </div>
-                <div>
-                  <label className="field-label">Preferred time</label>
-                  <select value={form.time} onChange={set("time")} className="field-input">
-                    <option value="">Select…</option>
-                    {TIMES.map((t) => <option key={t}>{t}</option>)}
-                  </select>
-                </div>
-              </div>
+              <p className="rounded-sm border border-ink-700 bg-ink-950/60 px-4 py-3 text-xs leading-relaxed text-white/50">
+                No need to pick a time here — once we get your request, we'll schedule your call
+                on our calendar and send you a confirmation with the exact date and time.
+              </p>
 
               {error && <p className="text-sm text-danger">{error}</p>}
 
@@ -199,7 +173,7 @@ export default function Booking() {
                 {status === "loading" ? (
                   <><Loader2 size={18} className="animate-spin" /> Booking…</>
                 ) : (
-                  "Claim My Free Call"
+                  "Book My Free Call"
                 )}
               </button>
               <p className="text-center text-xs text-white/35">
