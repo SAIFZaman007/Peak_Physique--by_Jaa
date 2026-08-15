@@ -65,7 +65,10 @@ api.interceptors.response.use(
 
 // Small helper to surface a readable error message from FastAPI responses.
 export function apiError(err, fallback = "Something went wrong. Please try again.") {
-  const detail = err?.response?.data?.detail;
+  if (!err?.response) {
+    return "Cannot reach backend server. Please ensure the backend is running on http://localhost:8000.";
+  }
+  const detail = err.response.data?.detail;
   if (typeof detail === "string") return detail;
   if (Array.isArray(detail) && detail[0]?.msg) return detail[0].msg;
   return fallback;
